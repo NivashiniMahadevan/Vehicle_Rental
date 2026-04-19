@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Vehicle Rental{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Dashboard</h1>
+        <p>Overview of your rental business</p>
+    </div>
+</section>
+
+<section class="card-grid">
+    <div class="metric-card">
+        <div class="label">Total Vehicles</div>
+        <div class="value">{{ total_vehicles }}</div>
+        <div class="delta">+12% from last month</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Total Bookings</div>
+        <div class="value">{{ total_bookings }}</div>
+        <div class="delta">+8% from last month</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Total Customers</div>
+        <div class="value">{{ total_customers }}</div>
+        <div class="delta">+15% from last month</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Active Rentals</div>
+        <div class="value">{{ active_rentals }}</div>
+        <div class="delta" style="color:#dc2626;">-3% from last month</div>
+    </div>
+</section>
+
+<section class="chart-grid">
+    <div class="panel">
+        <h2>Bookings Overview</h2>
+        <canvas id="bookingsChart"></canvas>
+    </div>
+    <div class="panel">
+        <h2>Revenue Trend</h2>
+        <canvas id="revenueChart"></canvas>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Utilization Rate</h2>
+    <div class="metric-card" style="max-width: 360px;">
+        <div class="label">Fleet Utilization</div>
+        <div class="value">{{ utilization_rate }}%</div>
+        <div class="delta">Based on currently rented vehicles</div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Upcoming Returns</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rental ID</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Return Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in upcoming_returns %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No upcoming returns found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const monthLabels = [{% for month in month_labels %}"{{ month }}"{% if not loop.last %}, {% endif %}{% endfor %}];
+    const bookingValues = [{% for value in booking_percentages %}{{ value }}{% if not loop.last %}, {% endif %}{% endfor %}];
+    const revenueValues = [{% for value in revenue_percentages %}{{ value }}{% if not loop.last %}, {% endif %}{% endfor %}];
+
+    new Chart(document.getElementById("bookingsChart"), {
+        type: "bar",
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: "Bookings %",
+                data: bookingValues,
+                backgroundColor: "#52637a"
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    title: { display: true, text: "Percent (%)" }
+                },
+                x: { title: { display: true, text: "Month" } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById("revenueChart"), {
+        type: "line",
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: "Revenue %",
+                data: revenueValues,
+                borderColor: "#334155",
+                backgroundColor: "#334155",
+                tension: 0.35
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    title: { display: true, text: "Percent (%)" }
+                },
+                x: { title: { display: true, text: "Month" } }
+            }
+        }
+    });
+</script>
+{% endblock %}

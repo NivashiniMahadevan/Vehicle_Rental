@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Fleet Lifecycle | Vehicle Rental{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Fleet Lifecycle</h1>
+        <p>Track the lifecycle stages of your vehicle fleet</p>
+    </div>
+</section>
+
+<section class="card-grid">
+    <div class="metric-card">
+        <div class="label">Purchased</div>
+        <div class="value">{{ purchased_count }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Active</div>
+        <div class="value">{{ active_count }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Maintenance</div>
+        <div class="value">{{ maintenance_count }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Retired</div>
+        <div class="value">{{ retired_count }}</div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Vehicle Lifecycle Status</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Vehicle</th>
+                    <th>Registration</th>
+                    <th>Model</th>
+                    <th>Purchased</th>
+                    <th>Lifecycle Stage</th>
+                    <th>Current Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in lifecycle_rows %}
+                {% set stage = (row[4] or 'Unknown')|lower|replace(' ', '') %}
+                {% set status = (row[5] or 'Unknown')|lower|replace(' ', '') %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td><span class="status s-{{ stage }}">{{ row[4] or "Unknown" }}</span></td>
+                    <td><span class="status s-{{ status }}">{{ row[5] or "Unknown" }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No lifecycle data found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

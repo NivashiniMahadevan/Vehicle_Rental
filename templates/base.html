@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Vehicle Rental Management System{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header class="topbar">Vehicle Rental Management System</header>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">🚙</span>
+                <div>
+                    <div class="brand-title">Vehicle Rental</div>
+                    <div class="brand-subtitle">Management System</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Dashboard</a>
+                <a href="{{ url_for('customers') }}" class="{% if request.endpoint == 'customers' %}active{% endif %}">Customers</a>
+                <a href="{{ url_for('vehicles') }}" class="{% if request.endpoint == 'vehicles' %}active{% endif %}">Vehicles</a>
+                <a href="{{ url_for('bookings') }}" class="{% if request.endpoint == 'bookings' %}active{% endif %}">Bookings</a>
+                <a href="{{ url_for('rentals') }}" class="{% if request.endpoint == 'rentals' %}active{% endif %}">Rentals</a>
+                <a href="{{ url_for('payments') }}" class="{% if request.endpoint == 'payments' %}active{% endif %}">Payments</a>
+                <a href="{{ url_for('maintenance') }}" class="{% if request.endpoint == 'maintenance' %}active{% endif %}">Maintenance</a>
+                <a href="{{ url_for('fleet_lifecycle') }}" class="{% if request.endpoint == 'fleet_lifecycle' %}active{% endif %}">Fleet Lifecycle</a>
+            </nav>
+        </aside>
+
+        <main class="page-container">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-success">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

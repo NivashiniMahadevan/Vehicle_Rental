@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Customers | Vehicle Rental{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Customers</h1>
+        <p>Manage your customer database</p>
+    </div>
+    <button class="btn-primary" type="button" onclick="document.getElementById('add-customer-form').classList.toggle('hidden')">+ Add Customer</button>
+</section>
+
+<section id="add-customer-form" class="panel hidden">
+    <h2>Add Customer</h2>
+    <form method="POST" action="{{ url_for('add_customer') }}" class="form-grid">
+        <div>
+            <label>Name</label>
+            <input type="text" name="name" required>
+        </div>
+        <div>
+            <label>Phone</label>
+            <input type="text" name="phone" required>
+        </div>
+        <div>
+            <label>Email</label>
+            <input type="email" name="email">
+        </div>
+        <div>
+            <label>License No</label>
+            <input type="text" name="license_no" required>
+        </div>
+        <div style="grid-column: 1 / -1;">
+            <label>Address</label>
+            <textarea name="address" rows="2"></textarea>
+        </div>
+        <div>
+            <button class="btn-primary" type="submit">Save Customer</button>
+        </div>
+    </form>
+</section>
+
+<section class="panel">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>License No</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in customers %}
+                <tr>
+                    <td>{{ c[0] }}</td>
+                    <td>{{ c[1] }}</td>
+                    <td>{{ c[2] }}</td>
+                    <td>{{ c[3] }}</td>
+                    <td>{{ c[4] }}</td>
+                    <td>{{ c[5] }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No customers found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Bookings | Vehicle Rental{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Bookings</h1>
+        <p>Create and manage vehicle bookings</p>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>New Booking</h2>
+    <form method="POST" action="{{ url_for('add_booking') }}" class="form-grid">
+        <div>
+            <label>Customer</label>
+            <select name="customer_id" required>
+                <option value="" disabled selected>Select customer</option>
+                {% for c in customers %}
+                <option value="{{ c[0] }}">{{ c[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Vehicle</label>
+            <select name="vehicle_id" required>
+                <option value="" disabled selected>Select vehicle</option>
+                {% for v in vehicles %}
+                <option value="{{ v[0] }}">{{ v[2] }} ({{ v[1] }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Start Date</label>
+            <input type="date" name="start_date" required>
+        </div>
+        <div>
+            <label>End Date</label>
+            <input type="date" name="end_date" required>
+        </div>
+        <div style="display:flex;align-items:flex-end;">
+            <button type="submit" class="btn-primary">Book Vehicle</button>
+        </div>
+    </form>
+</section>
+
+<section class="panel">
+    <h2>All Bookings</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                {% set status = (b[5] or 'Unknown')|lower|replace(' ', '') %}
+                <tr>
+                    <td>{{ b[0] }}</td>
+                    <td>{{ b[1] }}</td>
+                    <td>{{ b[2] }}</td>
+                    <td>{{ b[3] }}</td>
+                    <td>{{ b[4] }}</td>
+                    <td><span class="status s-{{ status }}">{{ b[5] }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No bookings found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

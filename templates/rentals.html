@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Rentals | Vehicle Rental{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Rentals</h1>
+        <p>Track active and completed rentals</p>
+    </div>
+</section>
+
+<section class="card-grid">
+    <div class="metric-card">
+        <div class="label">Active Rentals</div>
+        <div class="value">{{ active_rentals | length }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Overdue Rentals</div>
+        <div class="value">{{ overdue_count }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Completed Rentals</div>
+        <div class="value">{{ completed_rentals | length }}</div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Active and Overdue Rentals</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rental ID</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in active_rentals %}
+                {% set status = (row[5] or 'Unknown')|lower|replace(' ', '') %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td><span class="status s-{{ status }}">{{ row[5] }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No active rentals found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>Completed Rentals</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rental ID</th>
+                    <th>Customer</th>
+                    <th>Vehicle</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in completed_rentals %}
+                {% set status = (row[5] or 'Unknown')|lower|replace(' ', '') %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td><span class="status s-{{ status }}">{{ row[5] }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No completed rentals found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

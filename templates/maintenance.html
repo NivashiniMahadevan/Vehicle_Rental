@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Maintenance | Vehicle Rental{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1>Maintenance</h1>
+        <p>Track vehicle maintenance and service records</p>
+    </div>
+    <button class="btn-primary" type="button" onclick="document.getElementById('add-maintenance-form').classList.toggle('hidden')">+ Add Maintenance Record</button>
+</section>
+
+<section id="add-maintenance-form" class="panel hidden">
+    <h2>Add Maintenance Record</h2>
+    <form method="POST" action="{{ url_for('add_maintenance') }}" class="form-grid">
+        <div>
+            <label>Vehicle</label>
+            <select name="vehicle_id" required>
+                <option value="" disabled selected>Select vehicle</option>
+                {% for v in vehicle_options %}
+                <option value="{{ v[0] }}">{{ v[2] }} ({{ v[1] }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Maintenance Date</label>
+            <input type="date" name="maintenance_date" required>
+        </div>
+        <div>
+            <label>Cost</label>
+            <input type="number" step="0.01" name="cost" required>
+        </div>
+        <div>
+            <label>Status</label>
+            <select name="status" required>
+                <option value="Scheduled">Scheduled</option>
+                <option value="In Service">In Service</option>
+                <option value="Completed">Completed</option>
+            </select>
+        </div>
+        <div style="grid-column: 1 / -1;">
+            <label>Description</label>
+            <textarea name="description" rows="2" required></textarea>
+        </div>
+        <div>
+            <button class="btn-primary" type="submit">Save Maintenance</button>
+        </div>
+    </form>
+</section>
+
+<section class="card-grid">
+    <div class="metric-card">
+        <div class="label">In Service</div>
+        <div class="value">{{ in_service }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Scheduled</div>
+        <div class="value">{{ scheduled }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Completed</div>
+        <div class="value">{{ completed }}</div>
+    </div>
+    <div class="metric-card">
+        <div class="label">Total Cost</div>
+        <div class="value">₹{{ "%.2f"|format(total_cost) }}</div>
+    </div>
+</section>
+
+<section class="panel">
+    <h2>All Maintenance Records</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Maintenance ID</th>
+                    <th>Vehicle ID</th>
+                    <th>Issue/Service</th>
+                    <th>Service Date</th>
+                    <th>Cost</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in maintenance_rows %}
+                {% set status = (m[5] or 'Unknown')|lower|replace(' ', '') %}
+                <tr>
+                    <td>{{ m[0] }}</td>
+                    <td>{{ m[1] }}</td>
+                    <td>{{ m[2] }}</td>
+                    <td>{{ m[3] }}</td>
+                    <td>₹{{ "%.2f"|format(m[4]) }}</td>
+                    <td><span class="status s-{{ status }}">{{ m[5] }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No maintenance records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
